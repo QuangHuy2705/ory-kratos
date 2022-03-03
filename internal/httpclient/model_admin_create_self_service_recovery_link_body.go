@@ -20,8 +20,6 @@ type AdminCreateSelfServiceRecoveryLinkBody struct {
 	// Link Expires In  The recovery link will expire at that point in time. Defaults to the configuration value of `selfservice.flows.recovery.request_lifespan`.
 	ExpiresIn  *string `json:"expires_in,omitempty"`
 	IdentityId string  `json:"identity_id"`
-	Email string `json:"email"`
-
 }
 
 // NewAdminCreateSelfServiceRecoveryLinkBody instantiates a new AdminCreateSelfServiceRecoveryLinkBody object
@@ -31,7 +29,6 @@ type AdminCreateSelfServiceRecoveryLinkBody struct {
 func NewAdminCreateSelfServiceRecoveryLinkBody(identityId string, email string) *AdminCreateSelfServiceRecoveryLinkBody {
 	this := AdminCreateSelfServiceRecoveryLinkBody{}
 	this.IdentityId = identityId
-	this.Email = email
 	return &this
 }
 
