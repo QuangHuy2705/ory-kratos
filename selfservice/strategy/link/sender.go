@@ -2,16 +2,16 @@ package link
 
 import (
 	"context"
+	"log"
 	"net/http"
 	"net/url"
 
-	"github.com/pkg/errors"
-
+	"github.com/ory/kratos/courier"
 	"github.com/ory/x/errorsx"
 	"github.com/ory/x/sqlcon"
 	"github.com/ory/x/urlx"
+	"github.com/pkg/errors"
 
-	"github.com/ory/kratos/courier"
 	templates "github.com/ory/kratos/courier/template"
 	"github.com/ory/kratos/driver/config"
 	"github.com/ory/kratos/identity"
@@ -51,6 +51,56 @@ func NewSender(r senderDependencies) *Sender {
 // SendRecoveryLink sends a recovery link to the specified address. If the address does not exist in the store, an email is
 // still being sent to prevent account enumeration attacks. In that case, this function returns the ErrUnknownAddress
 // error.
+
+func (s *Sender) SendEmail(ctx context.Context, url string, to string, i *identity.Identity) error {
+		s.r.Logger().
+		WithField("via", "email").
+		WithField("address", to).
+		Info("About to send email")
+		// model, err := x.StructToMap(i)
+
+		// if (err != nil) {
+		// 	s.r.Logger().WithError(err)
+		// }
+
+
+	// s.send(ctx, string(address.Via), templates.NewRecoveryValid(s.r.Config(ctx),
+	// 	&templates.RecoveryValidModel{To: address.Value, RecoveryURL: urlx.CopyWithQuery(
+	// 		urlx.AppendPaths(s.r.Config(ctx).SelfPublicURL(nil), recovery.RouteSubmitFlow),
+	// 		url.Values{
+	// 			"token": {token.Token},
+	// 			"flow":  {f.ID.String()},
+	// 		}).String(), Identity: model}))
+
+		error1 := s.send(ctx, "email", templates.NewRecoveryValid(s.r.Config(ctx), &templates.RecoveryValidModel{To: "thacquanghuy2705@gmail.com", RecoveryURL: url}))
+	log.Println("test error", error1)
+return nil;
+	// address, err := s.r.IdentityPool().FindRecoveryAddressByValue(ctx, identity.RecoveryAddressTypeEmail, to)
+	// if err != nil {
+	// 	if err := s.send(ctx, string(via), templates.NewRecoveryInvalid(s.r.Config(ctx), &templates.RecoveryInvalidModel{To: to})); err != nil {
+	// 		return err
+	// 	}
+	// 	return errors.Cause(ErrUnknownAddress)
+	// }
+
+	// // Get the identity associated with the recovery address
+	// i, err := s.r.IdentityPool().GetIdentity(ctx, address.IdentityID)
+	// if err != nil {
+	// 	return err
+	// }
+
+	// token := NewSelfServiceRecoveryToken(address, f, s.r.Config(r.Context()).SelfServiceLinkMethodLifespan())
+	// if err := s.r.RecoveryTokenPersister().CreateRecoveryToken(ctx, token); err != nil {
+	// 	return err
+	// }
+
+	// if err := s.SendRecoveryTokenTo(ctx, f, i, address, token); err != nil {
+	// 	return err
+	// }
+
+	// return nil
+} 
+
 func (s *Sender) SendRecoveryLink(ctx context.Context, r *http.Request, f *recovery.Flow, via identity.VerifiableAddressType, to string) error {
 	s.r.Logger().
 		WithField("via", via).

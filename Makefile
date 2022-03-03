@@ -122,7 +122,7 @@ quickstart:
 
 .PHONY: quickstart-dev
 quickstart-dev:
-		docker build -f .docker/Dockerfile-build -t oryd/kratos:latest .
+		docker build -f .docker/Dockerfile-build -t oryd/kratos:custom-image .
 		docker-compose -f quickstart.yml -f quickstart-standalone.yml -f quickstart-latest.yml $(QUICKSTART_OPTIONS) up --build --force-recreate
 
 # Formats the code
@@ -135,7 +135,11 @@ format: .bin/goimports docs/node_modules node_modules
 # Build local docker image
 .PHONY: docker
 docker:
+<<<<<<< HEAD
 		DOCKER_BUILDKIT=1 docker build -f .docker/Dockerfile-build --build-arg=COMMIT=$(VCS_REF) --build-arg=BUILD_DATE=$(BUILD_DATE) -t oryd/kratos:custom-v5 .
+=======
+		DOCKER_BUILDKIT=1 docker build -f .docker/Dockerfile-build --build-arg=COMMIT=$(VCS_REF) --build-arg=BUILD_DATE=$(BUILD_DATE) -t oryd/kratos:custom-image-test .
+>>>>>>> cc64e8bc (temp)
 
 # Runs the documentation tests
 .PHONY: test-docs

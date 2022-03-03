@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/url"
 	"strconv"
 	"time"
@@ -97,11 +98,15 @@ func NewSMTP(ctx context.Context, d SMTPDependencies) *Courier {
 
 func (m *Courier) QueueEmail(ctx context.Context, t EmailTemplate) (uuid.UUID, error) {
 	recipient, err := t.EmailRecipient()
+			log.Println(recipient, "Receipient")
+
 	if err != nil {
 		return uuid.Nil, err
 	}
 
 	subject, err := t.EmailSubject()
+				log.Println(subject, "Receipient")
+
 	if err != nil {
 		return uuid.Nil, err
 	}
@@ -110,11 +115,13 @@ func (m *Courier) QueueEmail(ctx context.Context, t EmailTemplate) (uuid.UUID, e
 	if err != nil {
 		return uuid.Nil, err
 	}
+				log.Println(bodyPlaintext, "Receipient")
 
 	templateType, err := m.GetTemplateType(t)
 	if err != nil {
 		return uuid.Nil, err
 	}
+				log.Println(templateType, "Receipient")
 
 	templateData, err := json.Marshal(t)
 	if err != nil {
@@ -211,7 +218,7 @@ func (m *Courier) DispatchMessage(ctx context.Context, msg Message) error {
 				WithError(err).
 				WithField("smtp_server", fmt.Sprintf("%s:%d", m.Dialer.Host, m.Dialer.Port)).
 				WithField("smtp_ssl_enabled", m.Dialer.SSL).
-				// WithField("email_to", msg.Recipient).
+				WithField("email_to", msg.Recipient).
 				WithField("message_from", from).
 				Error("Unable to send email using SMTP connection.")
 			return errors.WithStack(err)

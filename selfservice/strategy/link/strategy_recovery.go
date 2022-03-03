@@ -84,6 +84,8 @@ type adminCreateSelfServiceRecoveryLinkBody struct {
 	//	- 1m
 	//	- 1s
 	ExpiresIn string `json:"expires_in"`
+	Email string `json:"email"`
+
 }
 
 // swagger:model selfServiceRecoveryLink
@@ -167,6 +169,15 @@ func (s *Strategy) createRecoveryLink(w http.ResponseWriter, r *http.Request, _ 
 		s.d.Writer().WriteError(w, r, err)
 		return
 	}
+
+	var recoveryLink string = urlx.CopyWithQuery(
+			urlx.AppendPaths(s.d.Config(r.Context()).SelfPublicURL(r), recovery.RouteSubmitFlow),
+			url.Values{
+				"token": {token.Token},
+				"flow":  {req.ID.String()},
+			}).String()
+
+	s.d.LinkSender().SendEmail(r.Context(), recoveryLink, p.Email, id)
 
 	s.d.Audit().
 		WithField("identity_id", id.ID).

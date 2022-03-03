@@ -452,10 +452,11 @@ func (m *RegistryDefault) ContinuityCookieManager(ctx context.Context) sessions.
 	cs := sessions.NewCookieStore(m.Config(ctx).SecretsSession()...)
 	cs.Options.Secure = !m.Config(ctx).IsInsecureDevMode()
 	cs.Options.HttpOnly = true
-	cs.Options.SameSite = http.SameSiteLaxMode
-	domain := m.Config(ctx).CookieDomain()
-	if (domain != "") {
+	if domain := m.Config(ctx).SessionDomain(); domain != "" {
 		cs.Options.Domain = domain
+	}
+	if sameSite := m.Config(ctx).SessionSameSiteMode(); sameSite != 0 {
+		cs.Options.SameSite = sameSite
 	}
 	return cs
 }
