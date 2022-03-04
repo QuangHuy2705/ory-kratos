@@ -457,6 +457,13 @@ func (m *RegistryDefault) ContinuityCookieManager(ctx context.Context) sessions.
 	if (domain != "") {
 		cs.Options.Domain = domain
 	}
+	if sameSite := m.Config(ctx).SessionSameSiteMode(); sameSite != 0 {
+		cs.Options.SameSite = sameSite
+	}
+
+	if path := m.Config(ctx).SessionPath(); path != "" {
+		cs.Options.Path = path
+	}
 	return cs
 }
 
