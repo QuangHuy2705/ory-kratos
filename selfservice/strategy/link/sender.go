@@ -2,7 +2,6 @@ package link
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"net/url"
 
@@ -58,47 +57,8 @@ func (s *Sender) SendEmail(ctx context.Context, url string, to string, i *identi
 		WithField("address", to).
 		Info("About to send email")
 		// model, err := x.StructToMap(i)
-
-		// if (err != nil) {
-		// 	s.r.Logger().WithError(err)
-		// }
-
-
-	// s.send(ctx, string(address.Via), templates.NewRecoveryValid(s.r.Config(ctx),
-	// 	&templates.RecoveryValidModel{To: address.Value, RecoveryURL: urlx.CopyWithQuery(
-	// 		urlx.AppendPaths(s.r.Config(ctx).SelfPublicURL(nil), recovery.RouteSubmitFlow),
-	// 		url.Values{
-	// 			"token": {token.Token},
-	// 			"flow":  {f.ID.String()},
-	// 		}).String(), Identity: model}))
-
-		error1 := s.send(ctx, "email", templates.NewRecoveryValid(s.r.Config(ctx), &templates.RecoveryValidModel{To: "thacquanghuy2705@gmail.com", RecoveryURL: url}))
-	log.Println("test error", error1)
+		s.send(ctx, "email", templates.NewRecoveryValid(s.r.Config(ctx), &templates.RecoveryValidModel{To: to, RecoveryURL: url, }))
 return nil;
-	// address, err := s.r.IdentityPool().FindRecoveryAddressByValue(ctx, identity.RecoveryAddressTypeEmail, to)
-	// if err != nil {
-	// 	if err := s.send(ctx, string(via), templates.NewRecoveryInvalid(s.r.Config(ctx), &templates.RecoveryInvalidModel{To: to})); err != nil {
-	// 		return err
-	// 	}
-	// 	return errors.Cause(ErrUnknownAddress)
-	// }
-
-	// // Get the identity associated with the recovery address
-	// i, err := s.r.IdentityPool().GetIdentity(ctx, address.IdentityID)
-	// if err != nil {
-	// 	return err
-	// }
-
-	// token := NewSelfServiceRecoveryToken(address, f, s.r.Config(r.Context()).SelfServiceLinkMethodLifespan())
-	// if err := s.r.RecoveryTokenPersister().CreateRecoveryToken(ctx, token); err != nil {
-	// 	return err
-	// }
-
-	// if err := s.SendRecoveryTokenTo(ctx, f, i, address, token); err != nil {
-	// 	return err
-	// }
-
-	// return nil
 } 
 
 func (s *Sender) SendRecoveryLink(ctx context.Context, r *http.Request, f *recovery.Flow, via identity.VerifiableAddressType, to string) error {
