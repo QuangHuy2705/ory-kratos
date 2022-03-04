@@ -2,6 +2,7 @@ package link
 
 import (
 	"context"
+	"log"
 	"net/http"
 	"net/url"
 
@@ -56,8 +57,11 @@ func (s *Sender) SendEmail(ctx context.Context, url string, to string, i *identi
 		WithField("via", "email").
 		WithField("address", to).
 		Info("About to send email")
-		// model, err := x.StructToMap(i)
-		s.send(ctx, "email", templates.NewRecoveryValid(s.r.Config(ctx), &templates.RecoveryValidModel{To: to, RecoveryURL: url, }))
+		model, err := x.StructToMap(i)
+		if (err != nil) {
+			log.Println(err, "model error")
+		}
+		s.send(ctx, "email", templates.NewRecoveryValid(s.r.Config(ctx), &templates.RecoveryValidModel{To: to, RecoveryURL: url, Identity: model}))
 return nil;
 } 
 
